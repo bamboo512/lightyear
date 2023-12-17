@@ -1,0 +1,34 @@
+database:
+  type: postgres
+  host: localhost
+  port: 5432
+  username: username
+  password: password
+  database: database_name
+  log_level: dev
+
+logger:
+  level: debug
+  format: text
+  output: stdout
+  directory: log
+  show_line: true
+  log_in_console: true
+  prefix: ""
+
+redis:
+  address: localhost:6379
+  username: default
+  password: password
+  database: 0
+
+server:
+  port: 8080
+  host: 0.0.0.0 # all
+  env: dev
+
+oss:
+  enabled: false
+  account_id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  access_key_id: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  access_key_secret: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
