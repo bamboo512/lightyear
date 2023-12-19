@@ -1,0 +1,14 @@
+
+!config/*
+config/config.yaml
+
+storage
+
+.vscode
+.idea
+.goland
+
+
+storage/*
+
+**/*_test.go

@@ -21,8 +21,8 @@ const (
 
 type ImageTranscodePayload struct {
 	UUID     string
-	encoding string
-	quality  int
+	Encoding string
+	Quality  int
 }
 
 //----------------------------------------------
@@ -31,7 +31,7 @@ type ImageTranscodePayload struct {
 //----------------------------------------------
 
 func NewImageTranscodeTask(uuid string, encoding string, quality int) (*asynq.Task, error) {
-	payload, err := json.Marshal(ImageTranscodePayload{UUID: uuid, encoding: encoding, quality: quality})
+	payload, err := json.Marshal(ImageTranscodePayload{UUID: uuid, Encoding: encoding, Quality: quality})
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (processor *ImageProcessor) ProcessTask(ctx context.Context, t *asynq.Task)
 	if err := json.Unmarshal(t.Payload(), &p); err != nil {
 		return fmt.Errorf("json.Unmarshal failed: %v: %w", err, asynq.SkipRetry)
 	}
-	log.Printf("Transcoding image: uuid=%s", p.UUID)
+	log.Printf("Transcoding image: uuid=%s, encoding=%s, quality=%d", p.UUID, p.Encoding, p.Quality)
 
 	// Image transcode ...
 	file, err := models.GetFileByUUID(p.UUID)
@@ -66,13 +66,13 @@ func (processor *ImageProcessor) ProcessTask(ctx context.Context, t *asynq.Task)
 		return fmt.Errorf("error: failed to get file: %v", err)
 	}
 	// Update file instance
-	file.ExpectedExtension = "." + p.encoding
+	file.ExpectedExtension = "." + p.Encoding
 
 	// Transcode the image and handle any errors
 	originalPath := filepath.Join(global.Config.Storage.OriginalImagePath, p.UUID+file.OriginalExtension)
 	encodedPath := filepath.Join(global.Config.Storage.TranscodedImagePath, p.UUID+file.ExpectedExtension)
 
-	transcoder.TranscodeImage(originalPath, encodedPath, p.encoding, p.quality)
+	transcoder.TranscodeImage(originalPath, encodedPath, p.Encoding, p.Quality)
 
 	if err != nil {
 		log.Printf("Failed to transcode image: %v", err)

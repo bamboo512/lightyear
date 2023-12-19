@@ -49,8 +49,9 @@ func getEncoding(c *gin.Context) (string, error) {
 	var err error
 	if encoding != "avif" && encoding != "heic" && encoding != "webp" {
 		err = fmt.Errorf(ParamErrorEncoding)
+		return "", err
 	}
-	return encoding, err
+	return encoding, nil
 }
 
 func getFileUUID(c *gin.Context) (uuid string, err error) {
